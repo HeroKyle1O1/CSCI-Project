@@ -74,20 +74,30 @@ class ToneMatrix:
     def resize(self, new_size):
         if new_size < 1:
             raise ValueError
-        
-        """Change the grid to new_size x new_size.
 
-        Cells present in both the old and new grid keep their values; new
-        cells start off. Instruments for rows that survive are reused as-is,
-        rows beyond the old size get fresh instruments. The playhead resets
-        to column 0 and the next call to next_sample() plucks immediately.
+        old_size = self.grid_size
+        common = min(old_size, new_size)
 
-        Raise ValueError if new_size < 1.
-        """
-        # TODO (Milestone 8)
-        raise NotImplementedError("ToneMatrix.resize")
+        new_grid = [False] * (new_size ** 2)
+        for row in range(common):
+            for col in range(common):
+                old_index = old_size * row + col
+                new_index = new_size * row + col
+                new_grid[new_index] = self.grid[old_index]
 
-    ### serialization
+        if new_size > old_size:
+            for row in range(old_size, new_size):
+                self.instruments.append(
+                    StringInstrument(frequency_for_row(row, new_size), self._sample_rate)
+                )
+        else:
+            self.instruments = self.instruments[:new_size]
+
+        self.grid = new_grid
+        self.grid_size = new_size
+        self.column = 0
+        self._calls = 0
+
 
     def to_text(self):
         text = ""
