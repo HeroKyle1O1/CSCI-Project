@@ -51,7 +51,7 @@ class ToneMatrix:
                 self.set_cell(row, col, False)
 
     def next_sample(self):
-        if self._calls == 0 or self._calls % self._samples_per_column == 0:
+        if self._calls == 0:
             self.pluck_column(self.column)
             self.column += 1
 
@@ -63,6 +63,8 @@ class ToneMatrix:
             total += instrument.next_sample()
 
         self._calls += 1
+        if self._calls == self._samples_per_column:
+            self._calls = 0
 
         return total
 

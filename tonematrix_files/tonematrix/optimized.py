@@ -20,7 +20,7 @@ class ToneMatrix(_ToneMatrix):
             self._active.discard(row)
 
     def next_sample(self):
-        if self._calls == 0 or self._calls % self._samples_per_column == 0:
+        if self._calls == 0:
             self.pluck_column(self.column)
             self._retire_quiet_strings()
             self.column += 1
@@ -32,6 +32,9 @@ class ToneMatrix(_ToneMatrix):
             total += self.instruments[row].next_sample()
 
         self._calls += 1
+        if self._calls == self._samples_per_column:
+            self._calls = 0
+
         return total
 
     def resize(self, new_size):
