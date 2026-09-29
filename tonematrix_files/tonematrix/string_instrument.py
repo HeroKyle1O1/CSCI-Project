@@ -33,11 +33,11 @@ class StringInstrument:
         return self.buffer.size()
 
     def pluck(self):
-        for _ in range(self.buffer.capacity() // 2):
+        for _ in range(self.buffer.size() // 2):
             self.buffer.dequeue()
             self.buffer.enqueue(+PLUCK_AMPLITUDE)
 
-        for _ in range((self.buffer.capacity() + 1) // 2):
+        for _ in range((self.buffer.size() + 1) // 2):
             self.buffer.dequeue()
             self.buffer.enqueue(-PLUCK_AMPLITUDE)
 
